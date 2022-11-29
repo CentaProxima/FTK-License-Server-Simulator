@@ -93,8 +93,16 @@ ___
 
 ![분석화면7-2](https://raw.githubusercontent.com/CentaProxima/FTK-License-Server-Simulator/main/resources/analyze7-2.png)
 
-`negotiateEncryption`의 값이 true이면, `initializeRSA`를 통해 공개키 암호화 통신을 위한 초기화 작업을 한다. 서버와 공개키를 서로 교환하는 듯한데,
-서버에 아마 `dna3.Worker.getPublicKey` 메소드가 있어, 해당 메소드로부터 키를 받아오는 듯 하다. 키 교환이 끝나면, RSA 암/복호화 객체를 생성한다.
+`negotiateEncryption`의 값이 true이면, `initializeRSA`를 통해 공개키 암호화 통신을 위한 초기화 작업을 한다. 서버와 공개키를 서로 교환하는 것 같은데,
+서버에 아마 `dna3.Worker.getPublicKey` 메소드가 존재하여, 해당 메소드로부터 키를 받아오는 것 같다.
+
+<br />
+
+![분석화면7-3](https://raw.githubusercontent.com/CentaProxima/FTK-License-Server-Simulator/main/resources/analyze7-3.png)
+
+결론부터 말하자면, `dna3.Worker.getPublicKey` 메소드는 Engine.jar 파일 내에 존재한다. 자세한 내용은 [3장 Invoke](#3-invoke)를 참고. 일단, 해당 메소드를 분석해보면, SUPERVISOR 설정 파일로부터 Modulus와 PublicExponent를 가져와 클라이언트로 전달함으로써, 키 교환을 과정을 거친다. 
+
+키 교환이 끝나면, RSA 암/복호화 객체를 생성한다.
 
 <br />
 <br />
@@ -112,7 +120,7 @@ RSA 통신 초기화가 끝나고, 서버와 클라이언트는 핸드쉐이킹 
 ___
 ![분석화면9-1](https://raw.githubusercontent.com/CentaProxima/FTK-License-Server-Simulator/main/resources/analyze9-1.png)
 
-난수로 임의의 8바이트 키(lowKey)를 생성하고, 서버로 전송한다. 그리고, 서버로부터 hiKey를 읽어와 리틀 엔디안(?) 방식으로 이어붙여 키를 16바이트의 AES 암호화 키를 생성한다.
+난수로 임의의 8바이트 키(lowKey)를 생성하고, 서버로 전송한다. 그리고, 서버로부터 똑같이 8바이트 크기의 hiKey를 읽어와 리틀 엔디안(?) 방식으로 이어붙여 16바이트의 AES 암호화 키를 생성한다.
 
 <br />
 <br />
